@@ -1,0 +1,6 @@
+{
+  "name": "CIFRA FLOW FINANCIERO: Plataforma de Educación Financiera 3D",
+  "description": "Plataforma interactiva de simulación que integra Comprensión Lectora, Primera Cuenta Bancaria (BDV/Plaza/Tesoro), Emprendimiento, Bolsa de Valores de Caracas (BVC) y Ciberseguridad Real.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
