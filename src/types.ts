@@ -229,10 +229,25 @@ export type AppPhase =
   | 'PHASE_5_FINAL_EVALUATION'
   | 'SIMULATOR_3D';
 
+export interface RuletaStep {
+  id: string;
+  stepNumber: number;
+  title: string;
+  category: string;
+  description: string;
+  pointsReward: number;
+  color: string;
+  iconName: string;
+  associatedModuleId: string;
+  challengeIndex?: number;
+}
+
 export interface ScoreState {
   currentScore: number;
   totalErrors: number;
   totalHits: number;
+  positivePoints: number; // Puntos afirmativos sumados
+  negativePoints: number; // Puntos negativos restados
   moduleScores: Record<string, number>;
   challengeIndex: number;
   streak: number;

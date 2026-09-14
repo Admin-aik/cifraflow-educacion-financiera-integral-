@@ -541,7 +541,7 @@ export const CardModal: React.FC<CardModalProps> = ({
           </div>
           <div className="space-y-1">
             <h2 className="text-xl font-black tracking-wider text-white uppercase font-mono">
-              ¡CARRERA DE RATAS SUPERADA!
+              ¡CIRCUITO FINANCIERO SUPERADO!
             </h2>
             <p className="text-xs font-mono text-cyan-300">
               Tu flujo pasivo (${financials.passiveIncome}/mes) ha superado oficialmente todos tus gastos mensuales fijos (${financials.totalExpenses}/mes)!

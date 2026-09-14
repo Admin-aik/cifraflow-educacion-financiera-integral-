@@ -24,6 +24,8 @@ interface GameplayPhase3Props {
   onCorrectAnswer: (pointsEarned: number, errorsMade: number) => void;
   onWrongAnswerPenalty: (penalty: number) => void;
   onBackToModules: () => void;
+  onAdvanceToTransition?: () => void;
+  onOpenRuleta?: () => void;
   textScale?: number;
 }
 
@@ -36,12 +38,15 @@ export const GameplayPhase3: React.FC<GameplayPhase3Props> = ({
   onCorrectAnswer,
   onWrongAnswerPenalty,
   onBackToModules,
+  onAdvanceToTransition,
+  onOpenRuleta,
   textScale = 1.0,
 }) => {
   // Set of failed option IDs
   const [failedOptionIds, setFailedOptionIds] = useState<string[]>([]);
   // Was correct option chosen?
   const [solved, setSolved] = useState<boolean>(false);
+  const [pointsAwarded, setPointsAwarded] = useState<boolean>(false);
   const [selectedCorrectOption, setSelectedCorrectOption] = useState<EducationalOption | null>(null);
   const [errorsInCurrentReto, setErrorsInCurrentReto] = useState<number>(0);
   const [lastFeedback, setLastFeedback] = useState<string>('');
@@ -50,6 +55,7 @@ export const GameplayPhase3: React.FC<GameplayPhase3Props> = ({
   useEffect(() => {
     setFailedOptionIds([]);
     setSolved(false);
+    setPointsAwarded(false);
     setSelectedCorrectOption(null);
     setErrorsInCurrentReto(0);
     setLastFeedback('');
@@ -67,17 +73,27 @@ export const GameplayPhase3: React.FC<GameplayPhase3Props> = ({
     if (solved || failedOptionIds.includes(option.id)) return;
 
     if (option.isCorrect) {
-      // ACIEERTO: Únicamente al pulsar la opción correcta se ilumina en verde esmeralda
+      // ACIERTO: Únicamente al pulsar la opción correcta se ilumina en verde esmeralda
       sound.playAssetAcquired();
       setSolved(true);
       setSelectedCorrectOption(option);
       setLastFeedback(option.explanation);
 
       // Speak feedback in Latin American voice
-      sound.speak(`¡Excelente! ${option.explanation}`);
+      sound.speak(`¡Excelente! Respuesta afirmativa. ${option.explanation}`);
+
+      // Calculate avatar bonus (e.g. +20 pts)
+      const avatarBonus = selectedAvatar.bonusEffect ? 20 : 0;
+      const netPoints = question.pointsReward + avatarBonus;
+
+      if (!pointsAwarded) {
+        setPointsAwarded(true);
+        // Suman los puntos afirmativos y se incrementa el balance en tiempo real
+        onCorrectAnswer(netPoints, errorsInCurrentReto);
+      }
     } else {
       // ERROR:
-      // 1. Se descuenta penalización en HUD derecho (-25 a -50 pts)
+      // 1. Se descuenta penalización en HUD derecho y balance (-25 a -50 pts)
       // 2. Opción queda deshabilitada y marcada como fallo
       // 3. LA RESPUESTA CORRECTA NUNCA SE MUESTRA NI SE ILUMINA EN VERDE ANTE UN ERROR
       // 4. El estudiante DEBE seguir intentando entre las opciones restantes
@@ -100,11 +116,16 @@ export const GameplayPhase3: React.FC<GameplayPhase3Props> = ({
     if (!solved) return;
     sound.playClick();
 
-    // Calculate avatar bonus (e.g. +25 pts)
-    const avatarBonus = selectedAvatar.bonusEffect ? 20 : 0;
-    const netPoints = question.pointsReward + avatarBonus;
-
-    onCorrectAnswer(netPoints, errorsInCurrentReto);
+    if (onAdvanceToTransition) {
+      onAdvanceToTransition();
+    } else {
+      const avatarBonus = selectedAvatar.bonusEffect ? 20 : 0;
+      const netPoints = question.pointsReward + avatarBonus;
+      if (!pointsAwarded) {
+        setPointsAwarded(true);
+        onCorrectAnswer(netPoints, errorsInCurrentReto);
+      }
+    }
   };
 
   return (
@@ -115,28 +136,63 @@ export const GameplayPhase3: React.FC<GameplayPhase3Props> = ({
     >
       {/* Header Info Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
-        <div className="flex items-center gap-2">
-          <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400 text-cyan-300 text-[10px] font-mono font-bold uppercase">
-            FASE 3: RETO ACTIVO {challengeNumber} / {totalChallenges}
-          </span>
-          <span className="text-xs font-mono text-slate-400">
-            Módulo: <strong className="text-white">{question.moduleTitle}</strong>
-          </span>
+        <div className="flex items-center gap-3">
+          <div
+            className="w-11 h-11 rounded-xl overflow-hidden border-2 shrink-0 shadow-md bg-slate-950"
+            style={{ borderColor: selectedAvatar.glowColor }}
+          >
+            {selectedAvatar.imageUrl ? (
+              <img
+                src={selectedAvatar.imageUrl}
+                alt={selectedAvatar.name}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-xl">
+                {selectedAvatar.avatarIcon}
+              </div>
+            )}
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400 text-cyan-300 text-[10px] font-mono font-bold uppercase">
+                FASE 3: RETO ACTIVO {challengeNumber} / {totalChallenges}
+              </span>
+              <span className="text-xs font-mono text-slate-400 hidden sm:inline">
+                Asesor: <strong className="text-white">{selectedAvatar.name}</strong>
+              </span>
+            </div>
+            <p className="text-xs font-mono text-slate-300 mt-0.5">
+              Módulo: <strong className="text-cyan-300">{question.moduleTitle}</strong>
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
+          {onOpenRuleta && (
+            <button
+              onClick={onOpenRuleta}
+              id="open-ruleta-gameplay-btn"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 via-rose-500 to-cyan-400 text-slate-950 text-xs font-mono font-black uppercase tracking-wider transition-all shadow-lg shadow-rose-950/40 hover:scale-105 active:scale-95 cursor-pointer"
+              title="Girar la Ruleta del Simulador"
+            >
+              <span>🎰 RULETA SIMULADOR</span>
+            </button>
+          )}
+
           <button
             onClick={handleReadAgain}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-cyan-500/40 text-cyan-300 hover:text-white text-xs font-mono font-bold transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-cyan-500/40 text-cyan-300 hover:text-white text-xs font-mono font-bold transition-colors cursor-pointer"
             title="Escuchar locución del reto en audio"
           >
             <Volume2 className="w-4 h-4 text-cyan-400" />
-            <span>LEER EN VOZ ALTA</span>
+            <span className="hidden sm:inline">LEER EN VOZ ALTA</span>
           </button>
 
           <button
             onClick={onBackToModules}
-            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-mono font-bold transition-colors border border-slate-700"
+            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-mono font-bold transition-colors border border-slate-700 cursor-pointer"
           >
             MÓDULOS
           </button>

@@ -391,7 +391,7 @@ export const Board2D: React.FC<Board2DProps> = ({
       <div className="absolute top-4 left-4 z-10 flex items-center gap-2 pointer-events-none">
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/90 backdrop-blur-md border border-cyan-500/40 text-xs font-mono text-cyan-300 shadow-lg">
           <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-          <span>{isOnFastTrack ? '⚡ VÍA RÁPIDA (ANILLO ORBITAL)' : '🔄 CARRERA DE RATAS (CIRCUITO INTERNO)'}</span>
+          <span>{isOnFastTrack ? '⚡ VÍA RÁPIDA (ANILLO ORBITAL)' : '🔄 CIRCUITO FINANCIERO (CIRCUITO INTERNO)'}</span>
         </div>
         <div className="px-2.5 py-1.5 rounded-lg bg-slate-900/90 backdrop-blur-md border border-slate-700 text-xs font-mono text-slate-400">
           Casilla #{playerIndex + 1}
@@ -434,7 +434,7 @@ export const Board2D: React.FC<Board2DProps> = ({
             <div>
               <div className="text-xs font-mono font-bold text-white uppercase">{hoveredTile.name}</div>
               <div className="text-[10px] text-cyan-400 font-mono">
-                {hoveredTile.track === 'FAST_TRACK' ? 'Vía Rápida Orbital' : 'Circuito Carrera de Ratas'} • Casilla #{hoveredTile.index + 1}
+                {hoveredTile.track === 'FAST_TRACK' ? 'Vía Rápida Orbital' : 'Circuito Financiero'} • Casilla #{hoveredTile.index + 1}
               </div>
             </div>
           </div>

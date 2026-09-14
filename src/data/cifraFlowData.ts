@@ -554,3 +554,103 @@ export const LEARNING_MODULES: LearningModule[] = [
     ],
   },
 ];
+
+export const SIMULATOR_RULETA_STEPS = [
+  {
+    id: 'step_1_diagnostico',
+    stepNumber: 1,
+    title: 'Paso 1: Diagnóstico & Presupuesto',
+    category: 'LECTURA FINANCIERA',
+    description: 'Aprende a diferenciar Activos vs Pasivos y a calcular tu Flujo de Caja Neto mensual.',
+    pointsReward: 140,
+    color: '#00f3ff', // Cyan
+    iconName: 'FileText',
+    associatedModuleId: 'mod_lectura',
+    challengeIndex: 0,
+  },
+  {
+    id: 'step_2_banca',
+    stepNumber: 2,
+    title: 'Paso 2: Sistema Bancario & Tasa BCV',
+    category: 'BANCA DIGITAL',
+    description: 'Domina el onboarding KYC, pago móvil C2P, OTP y la conversión oficial a Tasa BCV.',
+    pointsReward: 130,
+    color: '#34d399', // Emerald
+    iconName: 'Building2',
+    associatedModuleId: 'mod_banco',
+    challengeIndex: 0,
+  },
+  {
+    id: 'step_3_emprendimiento',
+    stepNumber: 3,
+    title: 'Paso 3: Emprendimiento & Márgenes',
+    category: 'NEGOCIOS JUVENILES',
+    description: 'Calcula costos fijos y variables, punto de equilibrio y precio de venta con margen.',
+    pointsReward: 150,
+    color: '#ff007f', // Fucsia
+    iconName: 'Rocket',
+    associatedModuleId: 'mod_emprendimiento',
+    challengeIndex: 0,
+  },
+  {
+    id: 'step_4_bvc',
+    stepNumber: 4,
+    title: 'Paso 4: Mercado de Capitales BVC',
+    category: 'INVERSIÓN REAL',
+    description: 'Conoce Casas de Bolsa, dividendos, acciones y títulos de deuda en la Bolsa de Valores de Caracas.',
+    pointsReward: 150,
+    color: '#fbbf24', // Ámbar
+    iconName: 'TrendingUp',
+    associatedModuleId: 'mod_bvc',
+    challengeIndex: 0,
+  },
+  {
+    id: 'step_5_ciberseguridad',
+    stepNumber: 5,
+    title: 'Paso 5: Ciberseguridad & Antifraude',
+    category: 'SEGURIDAD FIDO2',
+    description: 'Identifica ingeniería social, phishing bancario, 2FA seguro y biometría Passkeys.',
+    pointsReward: 140,
+    color: '#ef4444', // Rose/Red
+    iconName: 'ShieldAlert',
+    associatedModuleId: 'mod_ciberseguridad',
+    challengeIndex: 0,
+  },
+  {
+    id: 'step_6_cashflow',
+    stepNumber: 6,
+    title: 'Paso 6: Flujo Pasivo & Activos',
+    category: 'SIMULADOR 3D',
+    description: 'Genera ingresos pasivos recurrentes a través de activos productivos que superen tus gastos.',
+    pointsReward: 160,
+    color: '#8b5cf6', // Violet
+    iconName: 'Zap',
+    associatedModuleId: 'mod_lectura',
+    challengeIndex: 1,
+  },
+  {
+    id: 'step_7_fondo_emergencia',
+    stepNumber: 7,
+    title: 'Paso 7: Fondo de Emergencia',
+    category: 'RESILIENCIA FINANCIERA',
+    description: 'Construye un colchón de 3 a 6 meses de gastos para blindar tus finanzas ante contingencias.',
+    pointsReward: 135,
+    color: '#14b8a6', // Teal
+    iconName: 'Shield',
+    associatedModuleId: 'mod_banco',
+    challengeIndex: 1,
+  },
+  {
+    id: 'step_8_via_rapida',
+    stepNumber: 8,
+    title: 'Paso 8: Despegue a la Libertad',
+    category: 'VÍA RÁPIDA ORBITAL',
+    description: 'Supera el circuito financiero inicial y alcanza tus metas soñadas en la Vía Rápida.',
+    pointsReward: 170,
+    color: '#00f3ff', // Cyan Glow
+    iconName: 'Award',
+    associatedModuleId: 'mod_emprendimiento',
+    challengeIndex: 1,
+  },
+];
+

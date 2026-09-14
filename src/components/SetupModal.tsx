@@ -163,7 +163,7 @@ export const SetupModal: React.FC<SetupModalProps> = ({ onStartGame }) => {
                   ELIGE TU META SOÑADA EN LA VÍA RÁPIDA
                 </h2>
                 <p className="text-xs text-slate-400 mb-4">
-                  Una vez que escapes de la Carrera de Ratas, caer en tu Meta Soñada elegida con el capital necesario te dará la ¡VICTORIA TOTAL!
+                  Una vez que superes el Circuito Financiero, caer en tu Meta Soñada elegida con el capital necesario te dará la ¡VICTORIA TOTAL!
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

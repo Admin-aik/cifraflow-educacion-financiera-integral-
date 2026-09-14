@@ -85,7 +85,7 @@ export const ARCHETYPES: CharacterArchetype[] = [
     title: 'Barista de Especialidad',
     role: 'Artesano de Cyber-Café',
     avatar: '☕',
-    bio: 'Salario inicial más bajo, ¡pero con pasivos fijos mínimos! Puede escapar de la Carrera de Ratas muy rápido comprando activos con disciplina.',
+    bio: 'Salario inicial más bajo, ¡pero con pasivos fijos mínimos! Puede superar el Circuito Financiero muy rápido comprando activos con disciplina.',
     startingSalary: 2300,
     startingSavings: 1400,
     startingExpenses: {
@@ -169,7 +169,7 @@ export const DREAM_GOALS: DreamGoal[] = [
   },
 ];
 
-// 24 Casillas en el circuito interior (La Carrera de Ratas)
+// 24 Casillas en el circuito interior (El Circuito Financiero)
 export const RAT_RACE_TILES: Omit<BoardTile, 'position'>[] = [
   {
     id: 0,
@@ -825,7 +825,7 @@ export const DOODADS: DoodadCard[] = [
     title: 'Entrada VIP a Festival de Música Holográfica',
     description: 'Todos tus amigos van al festival en el desierto y te compraste la pulsera VIP para no quedarte fuera.',
     cost: 750,
-    richDadInsight: 'Las experiencias son divertidas, pero comprar lujos con tu SALARIO ACTIVO retrasa tu salida de la Carrera de Ratas. ¡Compra los lujos con el flujo de tus ACTIVOS!',
+    richDadInsight: 'Las experiencias son divertidas, pero comprar lujos con tu SALARIO ACTIVO retrasa tu salida del Circuito Financiero. ¡Compra los lujos con el flujo de tus ACTIVOS!',
   },
   {
     id: 'd_4',

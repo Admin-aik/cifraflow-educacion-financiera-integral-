@@ -139,13 +139,33 @@ export const AvatarSelectionPhase1: React.FC<AvatarSelectionPhase1Props> = ({
                   </span>
 
                   <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shadow-lg"
+                    className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-lg"
                     style={{
                       backgroundColor: `${avatar.glowColor}25`,
                       border: `1px solid ${avatar.glowColor}80`,
                     }}
                   >
                     {avatar.avatarIcon}
+                  </div>
+                </div>
+
+                {/* Caricature Image Illustration */}
+                <div
+                  className="w-full h-48 sm:h-52 rounded-2xl overflow-hidden relative border-2 bg-slate-950 shadow-inner group-hover:shadow-2xl transition-all"
+                  style={{ borderColor: `${avatar.glowColor}50` }}
+                >
+                  <img
+                    src={avatar.imageUrl}
+                    alt={avatar.name}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+                  <div
+                    className="absolute bottom-2 left-2 px-2 py-0.5 rounded-md font-mono text-[9px] font-black uppercase text-slate-950 shadow-md"
+                    style={{ backgroundColor: avatar.glowColor }}
+                  >
+                    {avatar.badge}
                   </div>
                 </div>
 
@@ -227,13 +247,23 @@ export const AvatarSelectionPhase1: React.FC<AvatarSelectionPhase1Props> = ({
         >
           <div className="flex items-center gap-3 text-left">
             <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shrink-0 shadow-lg"
+              className="w-16 h-16 rounded-2xl overflow-hidden shrink-0 shadow-lg border-2 bg-slate-950"
               style={{
-                backgroundColor: `${selectedAvatar.glowColor}30`,
-                border: `2px solid ${selectedAvatar.glowColor}`,
+                borderColor: selectedAvatar.glowColor,
               }}
             >
-              {selectedAvatar.avatarIcon}
+              {selectedAvatar.imageUrl ? (
+                <img
+                  src={selectedAvatar.imageUrl}
+                  alt={selectedAvatar.name}
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-3xl">
+                  {selectedAvatar.avatarIcon}
+                </div>
+              )}
             </div>
             <div>
               <div className="flex items-center gap-2">

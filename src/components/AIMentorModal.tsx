@@ -13,7 +13,7 @@ export const AIMentorModal: React.FC<AIMentorModalProps> = ({ isOpen, onClose, g
   const [messages, setMessages] = useState<Array<{ sender: 'mentor' | 'player'; text: string; source?: string }>>([
     {
       sender: 'mentor',
-      text: `👋 ¡Saludos! Soy **CyberKiyosaki**, tu Mentor Financiero con Inteligencia Artificial. Tu efectivo disponible actual es de **$${gameState.financials.cash.toLocaleString()}**, y tu ingreso pasivo mensual es de **$${gameState.financials.passiveIncome}/mes** frente a **$${gameState.financials.totalExpenses}/mes** de gastos de vida. ¡Pregúntame cualquier duda sobre tu estrategia, inversiones o cómo escapar de la carrera de ratas!`,
+      text: `👋 ¡Saludos! Soy **CyberKiyosaki**, tu Mentor Financiero con Inteligencia Artificial. Tu efectivo disponible actual es de **$${gameState.financials.cash.toLocaleString()}**, y tu ingreso pasivo mensual es de **$${gameState.financials.passiveIncome}/mes** frente a **$${gameState.financials.totalExpenses}/mes** de gastos de vida. ¡Pregúntame cualquier duda sobre tu estrategia, inversiones o cómo alcanzar la libertad financiera!`,
       source: 'initial',
     },
   ]);
@@ -37,7 +37,7 @@ export const AIMentorModal: React.FC<AIMentorModalProps> = ({ isOpen, onClose, g
         body: JSON.stringify({
           playerState: gameState,
           query: q,
-          context: `El jugador está en el turno #${gameState.turnCount} (${gameState.isOnFastTrack ? 'VÍA RÁPIDA' : 'CARRERA DE RATAS'}). Activos que posee: ${gameState.assets.map((a) => a.name).join(', ') || 'Ninguno'}. Pasivos/Deudas: ${gameState.liabilities.map((l) => `${l.name} ($${l.principalBalance})`).join(', ') || 'Ninguno'}.`,
+          context: `El jugador está en el turno #${gameState.turnCount} (${gameState.isOnFastTrack ? 'VÍA RÁPIDA' : 'CIRCUITO FINANCIERO'}). Activos que posee: ${gameState.assets.map((a) => a.name).join(', ') || 'Ninguno'}. Pasivos/Deudas: ${gameState.liabilities.map((l) => `${l.name} ($${l.principalBalance})`).join(', ') || 'Ninguno'}.`,
         }),
       });
 
@@ -55,7 +55,7 @@ export const AIMentorModal: React.FC<AIMentorModalProps> = ({ isOpen, onClose, g
         ...prev,
         {
           sender: 'mentor',
-          text: '💡 Consejo Táctico: Adquiere activos que pongan dinero en tu bolsillo cada mes. ¡Cuando tu ingreso pasivo supere tus gastos de vida, habrás ganado la carrera de ratas!',
+          text: '💡 Consejo Táctico: Adquiere activos que pongan dinero en tu bolsillo cada mes. ¡Cuando tu ingreso pasivo supere tus gastos de vida, habrás superado el circuito financiero!',
         },
       ]);
     } finally {

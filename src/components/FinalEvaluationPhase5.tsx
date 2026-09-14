@@ -114,9 +114,23 @@ export const FinalEvaluationPhase5: React.FC<FinalEvaluationPhase5Props> = ({
           <span className="text-[9px] text-slate-500">Reintentos asistidos</span>
         </div>
 
-        <div className="p-4 rounded-2xl bg-slate-900/90 border border-amber-500/40 text-center font-mono">
+        <div className="p-3 sm:p-4 rounded-2xl bg-slate-900/90 border border-amber-500/40 text-center font-mono flex flex-col items-center justify-center">
           <span className="text-[10px] text-slate-400 uppercase block mb-1">AVATAR OPERADOR</span>
-          <div className="text-sm font-bold text-amber-300 truncate">
+          <div className="w-10 h-10 rounded-xl overflow-hidden border border-amber-400/50 mb-1 bg-slate-950">
+            {selectedAvatar.imageUrl ? (
+              <img
+                src={selectedAvatar.imageUrl}
+                alt={selectedAvatar.name}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-sm">
+                {selectedAvatar.avatarIcon}
+              </div>
+            )}
+          </div>
+          <div className="text-xs sm:text-sm font-bold text-amber-300 truncate max-w-[110px]">
             {selectedAvatar.name.split(' ')[0]}
           </div>
           <span className="text-[9px] text-amber-400/80 uppercase">{selectedAvatar.badge}</span>
@@ -180,14 +194,27 @@ export const FinalEvaluationPhase5: React.FC<FinalEvaluationPhase5Props> = ({
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="w-16 h-16 rounded-full border-2 border-dashed border-amber-400 flex flex-col items-center justify-center text-[8px] font-bold text-amber-400 uppercase text-center p-1">
-              <span>SELLO DIGITAL</span>
-              <span className="text-[7px]">VERIFICADO</span>
+            <div
+              className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-amber-400 p-0.5 bg-slate-900 shadow-md shrink-0"
+              style={{ borderColor: selectedAvatar.glowColor }}
+            >
+              {selectedAvatar.imageUrl ? (
+                <img
+                  src={selectedAvatar.imageUrl}
+                  alt={selectedAvatar.name}
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover rounded-xl"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-lg">
+                  {selectedAvatar.avatarIcon}
+                </div>
+              )}
             </div>
             <div className="text-[10px] text-slate-400">
-              <p>Fecha: <strong>{currentDate}</strong></p>
-              <p>Avatar Asesor: <strong>{selectedAvatar.name}</strong></p>
-              <p className="text-emerald-400 font-bold">Score: {scoreState.currentScore} PTS</p>
+              <p>Fecha de emisión: <strong>{currentDate}</strong></p>
+              <p>Avatar Asesor: <strong className="text-white">{selectedAvatar.name}</strong></p>
+              <p className="text-emerald-400 font-bold">Puntuación Final: {scoreState.currentScore} PTS</p>
             </div>
           </div>
         </div>

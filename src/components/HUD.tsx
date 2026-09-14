@@ -57,7 +57,7 @@ export const HUD: React.FC<HUDProps> = ({
             <div className="flex items-center gap-2">
               <span className="font-bold text-sm text-white tracking-wide">CIFRAFLOW 2050</span>
               <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-cyan-950 text-cyan-400 border border-cyan-500/40">
-                {isOnFastTrack ? 'VÍA RÁPIDA' : 'CARRERA DE RATAS'}
+                {isOnFastTrack ? 'VÍA RÁPIDA' : 'CIRCUITO FINANCIERO'}
               </span>
             </div>
             <p className="text-xs text-slate-400 font-medium">

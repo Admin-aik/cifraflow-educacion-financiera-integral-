@@ -9,6 +9,7 @@ import {
   ExternalLink,
   CheckCircle2,
   TrendingUp,
+  RotateCw,
 } from 'lucide-react';
 import { AppPhase, StudentProfile, TeenAvatar, BCVRateData } from '../types';
 import { sound } from '../utils/audio';
@@ -24,6 +25,7 @@ interface TopNavigationBarProps {
   setTextScale: (scale: number) => void;
   isMuted: boolean;
   onToggleMute: () => void;
+  onOpenRuleta?: () => void;
 }
 
 export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
@@ -37,6 +39,7 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
   setTextScale,
   isMuted,
   onToggleMute,
+  onOpenRuleta,
 }) => {
   // Official BCV Rates (Real-Time Synchronized with bcv.org.ve)
   const [bcvRate, setBcvRate] = useState<number>(842.21);
@@ -318,6 +321,22 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
             </button>
           </div>
 
+          {/* Direct Roulette Button */}
+          {onOpenRuleta && (
+            <button
+              onClick={() => {
+                sound.playClick();
+                onOpenRuleta();
+              }}
+              id="top-nav-ruleta-btn"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 via-rose-500/20 to-cyan-500/20 border border-amber-400/60 hover:border-amber-300 text-amber-300 hover:text-white text-xs font-mono font-black transition-all hover:scale-105 active:scale-95 shadow-md cursor-pointer"
+              title="Girar la Ruleta del Simulador y ver pasos"
+            >
+              <RotateCw className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden sm:inline">RULETA</span>
+            </button>
+          )}
+
           {/* Sound / Speech Mute Toggle */}
           <button
             onClick={() => {
@@ -347,13 +366,22 @@ export const TopNavigationBar: React.FC<TopNavigationBarProps> = ({
               title="Perfil del estudiante y avatar seleccionado. Clic para cambiar avatar."
             >
               <div
-                className="w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold shadow-inner"
+                className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center text-sm font-bold shadow-inner border shrink-0"
                 style={{
                   backgroundColor: `${selectedAvatar?.glowColor || '#00f3ff'}20`,
-                  border: `1px solid ${selectedAvatar?.glowColor || '#00f3ff'}`,
+                  borderColor: selectedAvatar?.glowColor || '#00f3ff',
                 }}
               >
-                {selectedAvatar?.avatarIcon || '🎓'}
+                {selectedAvatar?.imageUrl ? (
+                  <img
+                    src={selectedAvatar.imageUrl}
+                    alt={selectedAvatar.name}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span>{selectedAvatar?.avatarIcon || '🎓'}</span>
+                )}
               </div>
               <div className="text-left hidden md:block">
                 <p className="text-[11px] font-bold text-white leading-tight truncate max-w-[130px]">

@@ -24,6 +24,7 @@ interface ModuleSelectionPhase2Props {
   onSelectModule: (moduleId: string) => void;
   onStartCampaign: () => void;
   onOpen3DSimulator: () => void;
+  onOpenRuleta?: () => void;
   textScale?: number;
 }
 
@@ -34,6 +35,7 @@ export const ModuleSelectionPhase2: React.FC<ModuleSelectionPhase2Props> = ({
   onSelectModule,
   onStartCampaign,
   onOpen3DSimulator,
+  onOpenRuleta,
   textScale = 1.0,
 }) => {
   const getIcon = (name: string, color: string) => {
@@ -61,24 +63,58 @@ export const ModuleSelectionPhase2: React.FC<ModuleSelectionPhase2Props> = ({
     >
       {/* Top Banner with Quick Actions */}
       <div className="rounded-3xl bg-slate-900/90 border border-slate-800 p-5 sm:p-6 backdrop-blur-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400 text-cyan-300 text-[10px] font-mono font-bold uppercase">
-              FASE 2: RUTA FORMATIVA Y SIMULACIONES
-            </span>
-            <span className="text-xs font-mono text-slate-400">
-              Operador: <strong className="text-white">{selectedAvatar.name}</strong>
-            </span>
+        <div className="flex items-center gap-4">
+          <div
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 shrink-0 shadow-lg bg-slate-950"
+            style={{ borderColor: selectedAvatar.glowColor }}
+          >
+            {selectedAvatar.imageUrl ? (
+              <img
+                src={selectedAvatar.imageUrl}
+                alt={selectedAvatar.name}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-3xl">
+                {selectedAvatar.avatarIcon}
+              </div>
+            )}
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-white tracking-wide uppercase">
-            CENTRO DE MISIONES & MÓDULOS PEDAGÓGICOS
-          </h2>
-          <p className="text-xs sm:text-sm font-mono text-slate-300 max-w-2xl">
-            Supera cada reto para sumar puntos al HUD acumulativo. Selecciona un área específica o activa la campaña continua.
-          </p>
+
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400 text-cyan-300 text-[10px] font-mono font-bold uppercase">
+                FASE 2: RUTA FORMATIVA Y SIMULACIONES
+              </span>
+              <span className="text-xs font-mono text-slate-400">
+                Operador: <strong className="text-white">{selectedAvatar.name}</strong> ({selectedAvatar.badge})
+              </span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-white tracking-wide uppercase">
+              CENTRO DE MISIONES & MÓDULOS PEDAGÓGICOS
+            </h2>
+            <p className="text-xs sm:text-sm font-mono text-slate-300 max-w-2xl">
+              Supera cada reto para sumar puntos al balance acumulativo. Selecciona un área específica, gira la ruleta o activa la campaña continua.
+            </p>
+          </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          {/* Direct Roulette Spin Button */}
+          {onOpenRuleta && (
+            <button
+              onClick={() => {
+                sound.playLevelUp();
+                onOpenRuleta();
+              }}
+              id="open-ruleta-btn"
+              className="flex-1 md:flex-none px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-400 via-rose-500 to-cyan-400 text-slate-950 font-mono text-xs font-black uppercase tracking-wider shadow-xl shadow-rose-500/30 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>🎰 GIRAR LA RULETA DEL SIMULADOR</span>
+            </button>
+          )}
+
           {/* Quick Start Continuous Campaign */}
           <button
             onClick={() => {
@@ -227,7 +263,7 @@ export const ModuleSelectionPhase2: React.FC<ModuleSelectionPhase2Props> = ({
                 Simulador CifraFlow 2050
               </h3>
               <p className="text-xs font-mono text-slate-400 mt-0.5">
-                Carrera de Ratas & Vía Rápida en Tablero 3D
+                Circuito Financiero & Vía Rápida en Tablero 3D
               </p>
             </div>
 
@@ -255,6 +291,63 @@ export const ModuleSelectionPhase2: React.FC<ModuleSelectionPhase2Props> = ({
             </span>
           </div>
         </div>
+
+        {/* 7th Card: Ruleta Simulator */}
+        {onOpenRuleta && (
+          <div
+            onClick={() => {
+              sound.playLevelUp();
+              onOpenRuleta();
+            }}
+            id="module-card-ruleta"
+            className="rounded-3xl p-5 bg-gradient-to-br from-slate-900/90 via-slate-900 to-cyan-950/40 border-2 border-cyan-400/60 hover:border-cyan-300 transition-all duration-300 cursor-pointer flex flex-col justify-between group shadow-xl hover:shadow-cyan-950/60 hover:-translate-y-1 relative overflow-hidden"
+          >
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-400 via-rose-500 to-cyan-400" />
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider border border-cyan-400 text-cyan-300 bg-cyan-500/15">
+                  RULETA DE PASOS
+                </span>
+                <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-500/60 flex items-center justify-center text-xl shadow-md">
+                  🎰
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-base font-black text-white group-hover:text-cyan-200 transition-colors">
+                  Ruleta del Simulador
+                </h3>
+                <p className="text-xs font-mono text-cyan-400 mt-0.5">
+                  Gira la Ruleta & Resuelve Preguntas por Paso
+                </p>
+              </div>
+
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Haz girar la ruleta para seleccionar aleatoriamente uno de los 8 pasos formativos del simulador, desbloquear sus preguntas y respuestas, y acumular puntos.
+              </p>
+
+              <div className="flex items-center gap-2 pt-2 text-[11px] font-mono text-slate-400">
+                <span className="px-2 py-0.5 rounded bg-slate-950 border border-slate-800 text-amber-300 font-bold">
+                  8 Pasos Tácticos
+                </span>
+                <span className="text-emerald-400 font-bold">
+                  Bonos +130 a +170 PTS
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-5 pt-3 border-t border-slate-800 flex items-center justify-between">
+              <span className="text-[11px] font-mono font-bold text-cyan-300 group-hover:text-white transition-colors flex items-center gap-1">
+                <span>GIRAR LA RULETA AHORA</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </span>
+              <span className="text-[10px] font-mono text-slate-500">
+                Simulador Dinámico
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

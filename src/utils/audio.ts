@@ -246,10 +246,30 @@ class SoundFX {
     );
   }
 
-  // Official transition narration for Phase 4
-  public speakGameOverReto(onEnd?: () => void) {
-    this.playDoodadPenalty();
-    this.speak('GAME OVER. Fin de este reto, vamos al siguiente.', onEnd);
+  // Roulette wheel spin tick sound
+  public playRuletaTick() {
+    if (this.isMuted) return;
+    this.initCtx();
+    if (!this.ctx) return;
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(800 + Math.random() * 200, this.ctx.currentTime);
+
+    gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.04);
+  }
+
+  // Official transition narration for Phase 4 / Level Completion
+  public speakGameOverReto(points: number = 0, onEnd?: () => void) {
+    this.playLevelUp();
+    this.speak(`¡Game Over! Usted tiene ${points} puntos. Nivel completado con respuesta afirmativa.`, onEnd);
   }
 
   public stopSpeaking() {

@@ -261,7 +261,7 @@ export const FinancialSheetDrawer: React.FC<FinancialSheetDrawerProps> = ({
                   <Sparkles className="w-4 h-4" /> LA REGLA DE ORO DEL FLUJO DE CAJA
                 </div>
                 <p className="text-slate-300 leading-relaxed">
-                  "No escapas de la Carrera de Ratas ganando un sueldo más alto; la inflación del estilo de vida suele devorar
+                  "No superas el Circuito Financiero ganando un sueldo más alto; la inflación del estilo de vida suele devorar
                   los aumentos salariales. Escapas utilizando tu excedente para adquirir <strong>activos</strong> que produzcan{' '}
                   <strong>flujo de caja pasivo</strong> hasta que supere tus gastos fijos de vida."
                 </p>

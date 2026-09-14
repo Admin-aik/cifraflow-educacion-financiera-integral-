@@ -14,6 +14,7 @@ import {
   AppPhase,
   ScoreState,
   EducationalQuestion,
+  RuletaStep,
 } from './types';
 import {
   ARCHETYPES,
@@ -42,6 +43,7 @@ import { ModuleSelectionPhase2 } from './components/ModuleSelectionPhase2';
 import { GameplayPhase3 } from './components/GameplayPhase3';
 import { TransitionPhase4 } from './components/TransitionPhase4';
 import { FinalEvaluationPhase5 } from './components/FinalEvaluationPhase5';
+import { RuletaSimulator } from './components/RuletaSimulator';
 import { sound } from './utils/audio';
 import { Trophy, ArrowLeft, Gamepad2 } from 'lucide-react';
 
@@ -142,6 +144,7 @@ export default function App() {
   const [isAIMentorOpen, setIsAIMentorOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [showVictoryModal, setShowVictoryModal] = useState(true);
+  const [isRuletaOpen, setIsRuletaOpen] = useState(false);
 
   // Educational Platform State (CIFRA FLOW FINANCIERO)
   const [currentPhase, setCurrentPhase] = useState<AppPhase>('PHASE_0_LOGIN');
@@ -167,6 +170,8 @@ export default function App() {
     currentScore: 0,
     totalErrors: 0,
     totalHits: 0,
+    positivePoints: 0,
+    negativePoints: 0,
     moduleScores: {},
     challengeIndex: 0,
     streak: 0,
@@ -264,35 +269,95 @@ export default function App() {
     const currentQ = activeChallengesQueue[currentChallengeIndex];
     const isLast = currentChallengeIndex >= activeChallengesQueue.length - 1;
 
+    // 1. Sumar puntos afirmativos al ScoreState de forma acumulativa y visible
     setScoreState((prev) => ({
       ...prev,
       currentScore: prev.currentScore + pointsEarned,
+      positivePoints: (prev.positivePoints || 0) + pointsEarned,
       totalHits: prev.totalHits + 1,
       streak: prev.streak + 1,
       moduleScores: {
         ...prev.moduleScores,
-        [currentQ.moduleTitle]: (prev.moduleScores[currentQ.moduleTitle] || 0) + pointsEarned,
+        [currentQ ? currentQ.moduleTitle : 'General']: ((prev.moduleScores && currentQ) ? (prev.moduleScores[currentQ.moduleTitle] || 0) : 0) + pointsEarned,
       },
     }));
 
+    // 2. Sumar directamente al Balance Financiero de efectivo del jugador
+    setGameState((prev) => {
+      const newCash = prev.financials.cash + pointsEarned;
+      const newLog = {
+        id: `tx-aff-${Date.now()}`,
+        turn: prev.turnCount,
+        title: `Acierto Afirmativo: +$${pointsEarned}`,
+        amount: pointsEarned,
+        type: 'INCOME' as const,
+        description: `Recompensa por respuesta afirmativa en: ${currentQ ? currentQ.topic : 'Reto'}`,
+      };
+      return {
+        ...prev,
+        financials: {
+          ...prev.financials,
+          cash: newCash,
+        },
+        logs: [newLog, ...prev.logs].slice(0, 40),
+      };
+    });
+
     setTransitionData({
-      completedTopic: currentQ.topic,
+      completedTopic: currentQ ? currentQ.topic : 'Misión Educativa',
       pointsEarned: pointsEarned,
       penalties: penalties,
       isLastChallenge: isLast,
     });
-
-    navigateToPhase('PHASE_4_TRANSITION');
   };
 
   const handleWrongAnswerPenalty = (penalty: number) => {
-    // Penalty is negative (e.g. -35), score reduces and can stay negative
+    // La penalización se resta del balance de efectivo y de los puntos
+    const penaltyAbs = Math.abs(penalty);
+
+    // 1. Restar puntos de la puntuación global neta y sumar a negativos restados
     setScoreState((prev) => ({
       ...prev,
-      currentScore: prev.currentScore + penalty,
+      currentScore: prev.currentScore - penaltyAbs,
+      negativePoints: (prev.negativePoints || 0) + penaltyAbs,
       totalErrors: prev.totalErrors + 1,
       streak: 0,
     }));
+
+    // 2. Restar directamente del Balance Financiero de efectivo del jugador
+    setGameState((prev) => {
+      const newCash = prev.financials.cash - penaltyAbs;
+      const newLog = {
+        id: `tx-neg-${Date.now()}`,
+        turn: prev.turnCount,
+        title: `Penalización por Error: -$${penaltyAbs}`,
+        amount: -penaltyAbs,
+        type: 'EXPENSE' as const,
+        description: `Descuento por respuesta incorrecta en simulador educativo`,
+      };
+      return {
+        ...prev,
+        financials: {
+          ...prev.financials,
+          cash: newCash,
+        },
+        logs: [newLog, ...prev.logs].slice(0, 40),
+      };
+    });
+  };
+
+  const handleSelectRuletaStep = (step: RuletaStep) => {
+    setIsRuletaOpen(false);
+    // Localizar reto educativo asociado a este paso de la ruleta
+    const targetIdx = activeChallengesQueue.findIndex(
+      (q) =>
+        q.associatedRuletaStepId === step.id ||
+        q.moduleTitle.toLowerCase().includes(step.title.toLowerCase().split(' ')[0])
+    );
+    if (targetIdx !== -1) {
+      setCurrentChallengeIndex(targetIdx);
+    }
+    navigateToPhase('PHASE_3_GAMEPLAY');
   };
 
   const handleProceedNextChallenge = () => {
@@ -426,8 +491,8 @@ export default function App() {
           turn: 1,
           timestamp: new Date().toLocaleTimeString(),
           type: 'SYSTEM',
-          title: 'Carrera Iniciada',
-          details: `Jugando como ${archetype.title}. Objetivo: ¡Escapar de la Carrera de Ratas!`,
+          title: 'Partida Iniciada',
+          details: `Jugando como ${archetype.title}. Objetivo: ¡Alcanzar la Libertad Financiera!`,
         },
       ],
       isRolling: false,
@@ -932,12 +997,14 @@ export default function App() {
         setTextScale={setTextScale}
         isMuted={isMuted}
         onToggleMute={handleToggleMute}
+        onOpenRuleta={() => setIsRuletaOpen(true)}
       />
 
-      {/* Universal Right-Side HUD (Right-HUD Panel) — shows cumulative score, negative numbers, avatar perk */}
+      {/* Universal Right-Side HUD (Right-HUD Panel) — shows cumulative score, cash balance, affirmative & negative points */}
       <RightSideHUD
         scoreState={scoreState}
         selectedAvatar={selectedTeenAvatar}
+        cashBalance={gameState.financials.cash}
         currentLevelName={
           currentPhase === 'PHASE_3_GAMEPLAY'
             ? `Reto ${currentChallengeIndex + 1}/${activeChallengesQueue.length}`
@@ -976,6 +1043,7 @@ export default function App() {
             onSelectModule={handleSelectModule}
             onStartCampaign={handleStartCampaign}
             onOpen3DSimulator={handleOpen3DSimulator}
+            onOpenRuleta={() => setIsRuletaOpen(true)}
             textScale={textScale}
           />
         )}
@@ -990,6 +1058,8 @@ export default function App() {
             onCorrectAnswer={handleCorrectAnswer}
             onWrongAnswerPenalty={handleWrongAnswerPenalty}
             onBackToModules={() => navigateToPhase('PHASE_2_MODULE_SELECT')}
+            onAdvanceToTransition={() => navigateToPhase('PHASE_4_TRANSITION')}
+            onOpenRuleta={() => setIsRuletaOpen(true)}
             textScale={textScale}
           />
         )}
@@ -1135,6 +1205,15 @@ export default function App() {
               </div>
             )}
           </div>
+        )}
+
+        {/* Modal de la Ruleta del Simulador (Giro y Pasos) */}
+        {isRuletaOpen && (
+          <RuletaSimulator
+            onSelectStep={handleSelectRuletaStep}
+            onClose={() => setIsRuletaOpen(false)}
+            textScale={textScale}
+          />
         )}
       </div>
     </div>
